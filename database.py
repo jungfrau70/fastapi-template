@@ -1,0 +1,27 @@
+from config import setting
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from typing import Generator
+
+#SQLALCHEMY_DATABASE_URL = 'sqlite:///./sqlite.db'
+SQLALCHEMY_DATABASE_URL = setting.DATABASE_URL
+
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    # if sqlite, uncomment below
+    # connect_args={"check_same_thread": False}
+) 
+
+SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False,)
+
+Base = declarative_base()
+
+
+# Dependency Injection
+def get_db() -> Generator:
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
