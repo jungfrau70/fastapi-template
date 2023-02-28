@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from config import setting
 from database import engine
 from models import Base
-from routers import users, items
+from routers import users, items, login
 
 Base.metadata.create_all(engine)
 
@@ -38,3 +38,4 @@ def get_envvars():
 
 app.include_router(users.router)
 app.include_router(items.router)
+app.include_router(login.router)

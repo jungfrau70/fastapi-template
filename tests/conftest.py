@@ -11,6 +11,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from typing import Generator
 from database import Base, get_db
+from config import setting
+from models import User, Item
+from hashing import Hasher
 
 SQLALCHEMY_DATABASE_URL = 'sqlite:///./sqlite.db'
 engine = create_engine(
@@ -34,3 +37,17 @@ def client():
     app.dependency_overrides[get_db] = override_get_db
     client = TestClient(app)
     yield client
+
+@pytest.fixture
+def header_token(client: TestClient):
+    db = TestSessionLocal()
+    user = db.query(User).filter(User.email=="user1@example.com").first()
+    if user is None:
+        user = User(email="user1@example.com", name="User1", hashed_password=Hasher.get_hash_password("user1"))
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    data = { "username": "user1@example.com", "password" : "user1"}
+    response = client.post("/login/token", data=data)
+    access_token = response.json()["access_token"]
+    return {"Authorization": f"Bearer {access_token}"}

@@ -6,7 +6,10 @@ psycopg2-binary
 pydantic[email]
 python-dotenv
 sqlalchemy
+python-multipart
+python-jose
 
 pytest
 pytest-cov
 requests
+httpx
