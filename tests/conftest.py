@@ -1,4 +1,5 @@
 import os
+import json
 import sys
 import pytest
 
@@ -19,7 +20,7 @@ engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     connect_args={"check_same_thread": False}
 ) 
-TestSessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False,)
+TestingSessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False,)
 Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 
@@ -27,7 +28,7 @@ Base.metadata.create_all(bind=engine)
 def client():
     # Dependency Injection
     def override_get_db() -> Generator:
-        db = TestSessionLocal()
+        db = TestingSessionLocal()
         try:
             yield db
         finally:
@@ -39,14 +40,19 @@ def client():
 
 @pytest.fixture
 def header_token(client: TestClient):
-    db = TestSessionLocal()
-    user = db.query(User).filter(User.email=="user1@example.com").first()
+    test_email = "user1@example.com"
+    test_name = "User1"
+    test_pass = "user1"
+    db = TestingSessionLocal()
+    user = db.query(User).filter(User.email==test_email).first()
     if user is None:
-        user = User(email="user1@example.com", name="User1", hashed_password=Hasher.get_hash_password("user1"))
+        user = User(email=test_email, name=test_name, hashed_password=Hasher.get_hash_password(test_pass))
         db.add(user)
         db.commit()
         db.refresh(user)
-    data = { "username": "user1@example.com", "password" : "user1"}
+    print(user.__dict__)
+    data = { "username": test_email, "password" : test_pass}
     response = client.post("/login/token", data=data)
+    print(response)
     access_token = response.json()["access_token"]
     return {"Authorization": f"Bearer {access_token}"}

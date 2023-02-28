@@ -1,15 +1,14 @@
-from config import setting
-
-def test_create_item(client):
+def test_create_item(client, header_token): 
     response = client.post(
         "/items/create/",
-        json={ "title": setting.TITLE, "description": setting.DESCRIPTION}
+        json={ "title": "Item100", "description": "This is item100"},
+        headers = header_token
     )
     assert response.status_code == 202
 
-def test_retrieve_by_id(client):
+def test_retrieve_item_by_id(client):
     response = client.get("/items/1")
-    print(response)
+    # print(response)
     assert response.status_code == 202
-    assert response.json()['title'] == setting.TITLE
-    assert response.json()['description'] == setting.DESCRIPTION
+    assert response.json()['title'] == "Item100"
+    assert response.json()['description'] == "This is item100"

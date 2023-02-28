@@ -24,10 +24,4 @@ class Settings:
     SECRET_KEY : str = os.getenv("SECRET_KEY")
     ALGORITHM : str = os.getenv("ALGORITHM")
 
-    TEST_EMAIL = "user1@example.com"
-    TEST_NAME = "User1"
-    TEST_PASS = "user1"
-    TEST_ITEM = "test item"
-    TEST_ITEM_DESC = "test item description"
-
 setting = Settings()

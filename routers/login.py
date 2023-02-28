@@ -8,11 +8,11 @@ from jose import jwt
 from config import setting
 
 router = APIRouter(
-    prefix="/auth",
+    prefix="/login",
     tags=['Auths']
 )
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token/")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login/token/")
 
 @router.post("/token")
 def retrieve_token_after_authentication(form_data: OAuth2PasswordRequestForm=Depends(), db: Session = Depends(get_db)):

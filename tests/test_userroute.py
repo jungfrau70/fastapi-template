@@ -1,5 +1,3 @@
-from config import setting
-
 def test_create_user(client):
     response = client.post(
         "/users/create/",
