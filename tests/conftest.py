@@ -1,6 +1,5 @@
 import os
 import sys
-import json
 import pytest
 
 from fastapi.testclient import TestClient
