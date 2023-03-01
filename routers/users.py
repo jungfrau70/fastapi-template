@@ -27,14 +27,20 @@ def get_users(db: Session = Depends(get_db)):
 
 
 @router.get('/me', status_code=status.HTTP_200_OK, response_model=UserOut)
-def get_user_by_email(db: Session = Depends(get_db)): 
-    email = "user1@example.com"
-    record = db.query(User).filter(User.email == email).first()
-    print(record)
-    if not record:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"record with the id {id} is not available")
-    return record  
+def get_me(request:Request, db: Session = Depends(get_db)): 
+    print(request.__dict__)
+    # user = request.state.user
+    # user_info = User.get(id==user.id)
+    # return user_info
+
+# def get_user_by_email(db: Session = Depends(get_db)): 
+#     email = "user1@example.com"
+#     record = db.query(User).filter(User.email == email).first()
+#     print(record)
+#     if not record:
+#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+#                             detail=f"record with the id {id} is not available")
+#     return record  
 
 @router.get('/{id}', status_code=status.HTTP_200_OK, response_model=UserOut)
 def get_user(id: int, db: Session = Depends(get_db)):

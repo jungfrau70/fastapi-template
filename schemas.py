@@ -25,7 +25,7 @@ class UserIn(UserBase):
     password: str
 
 class UserOut(UserBase):
-    # id: int
+    id: int
     is_active: bool
 
     class Config:
